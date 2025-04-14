@@ -7,15 +7,15 @@ const registerUser = async (req, res) => {
 
   try {
     const existingUser = await User.findOne({ email });
-    if (existingUser) return res.status(400).json({ message: 'User already exists' });
+    if (existingUser) return res.status(400).json({ message: "User already exists" });
 
     const passwordHash = await bcrypt.hash(password, 10);
     const newUser = new User({ name, email, password: passwordHash });
     await newUser.save();
 
-    res.status(201).json({ message: 'Registered successfully' });
+    res.status(201).json({ message: "Registered successfully" });
   } catch (error) {
-    res.status(500).json({ message: 'Server error during registration' });
+    res.status(500).json({ message: "Server error during registration" });
   }
 };
 
@@ -24,10 +24,10 @@ const loginUser = async (req, res) => {
 
   try {
     const user = await User.findOne({ email });
-    if (!user) return res.status(401).json({ message: 'Invalid credentials' });
+    if (!user) return res.status(401).json({ message: "Invalid credentials" });
   
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
+    if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
   
     const token = jwt.sign(
       { userId: user._id, email: user.email },
@@ -35,14 +35,14 @@ const loginUser = async (req, res) => {
       { expiresIn: "1d"}
     );
   
-    res.cookie('auth_token', token, {
+    res.cookie("auth_token", token, {
       httpOnly: true,
-      sameSite: 'lax',
+      sameSite: "lax",
       secure: false,
       maxAge: 24 * 60 * 60 * 1000,
     });
   
-    res.json({ message: 'Login successful' });
+    res.json({ message: "Login successful" });
   } catch(error) {
     res.status(500).json({ message: "Login Error" });
   }
@@ -51,7 +51,7 @@ const loginUser = async (req, res) => {
 
 const getCurrentUser = (req, res) => {
   const token = req.cookies.auth_token;
-  if (!token) return res.status(401).json({ message: 'Not logged in' });
+  if (!token) return res.status(401).json({ message: "Not logged in" });
 
   try {
     const decoded_token = jwt.verify(token, process.env.JWT_SECRET);

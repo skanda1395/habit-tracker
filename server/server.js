@@ -3,8 +3,9 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import habitRoutes from "./routes/habitRoutes.js";
-import authRoutes from "./routes/authRoutes.js";
+import habitRoutes from "./routes/habit.js";
+import authRoutes from "./routes/auth.js";
+import habitLogRoutes from "./routes/habitLog.js";
 import authMiddleware from "./middlewares/authMiddleware.js";
 
 dotenv.config();
@@ -24,6 +25,7 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use(authMiddleware);
 app.use("/api/habits", habitRoutes);
+app.use('/api/habit-logs', habitLogRoutes);
 
 // MongoDB Connection
 const PORT = process.env.PORT || 5000;
