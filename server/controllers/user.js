@@ -24,7 +24,7 @@ const loginUser = async (req, res) => {
 
   try {
     const user = await User.findOne({ email });
-    if (!user) return res.status(401).json({ message: "Invalid credentials" });
+    if (!user) return res.status(401).json({ message: "User not found" });
   
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
@@ -39,7 +39,7 @@ const loginUser = async (req, res) => {
       httpOnly: true,
       sameSite: "lax",
       secure: false,
-      maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 60 * 60 * 1000, // 1hr
     });
   
     res.json({ message: "Login successful" });
@@ -62,8 +62,12 @@ const getCurrentUser = (req, res) => {
 };
 
 const logoutUser = (req, res) => {
-  res.clearCookie();
-  res.json({ message: "Logged out" });
+  res.clearCookie('auth_token', {
+    httpOnly: true,
+    secure: false,
+    sameSite: 'lax',
+  });
+  res.status(200).json({ message: "Logged out" });
 }
 
 export { registerUser, loginUser, getCurrentUser, logoutUser };

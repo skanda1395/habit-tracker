@@ -17,7 +17,8 @@ const getAllHabits = async (req, res) => {
     const habits = await Habit.find({ user: req.userId }).sort({ createdAt: -1 });
     res.json(habits);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching habits", error });
+    console.log(error);
+    res.status(500).json({ message: "Error fetching habits" });
   }
 };
 
@@ -40,7 +41,8 @@ const editHabit = async (req, res) => {
 
     res.json(habit);
   } catch (error) {
-    res.status(500).json({ message: "Error updating habit", error: error.message });
+    console.log(error);
+    res.status(500).json({ message: "Error updating habit" });
   }
 };
 
